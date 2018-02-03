@@ -33,7 +33,7 @@ public class Sudoku {
 		Stack<Grille> pile = new Stack<Grille>();
 		pile.push(grilleInit1);
 
-
+		long tmp = System.currentTimeMillis();
 		boolean resul = resoudreSudoku(pile);
 
 
@@ -41,6 +41,7 @@ public class Sudoku {
 			System.out.println("La grille a été résolue");
 			Grille grilleResul = pile.peek();
 			grilleResul.afficheGrille();
+			System.out.println("Temps: " + (System.currentTimeMillis() - tmp));
 		}
 		else{
 			System.out.println("Aucune solution n'a été trouvée");
@@ -62,9 +63,10 @@ public class Sudoku {
 		Grille g = pileGrilles.pop();
 		
 		if(g.getNbCasesVides() == 0) {
+			pileGrilles.push(g);
 			return true;
 		} else {
-			cpossible = g.getCasePossible().get(0);
+			cpossible = g.meilleurCase();
 			
 			System.out.println(cpossible.getI() + ", " + cpossible.getJ());
 
@@ -79,7 +81,6 @@ public class Sudoku {
 				copie = new Grille(g);
 
 				copie.setCase(copie.getCase(cpossible.getI(), cpossible.getJ()), v);
-				copie.afficheGrille();
 				
 				pileGrilles.push(copie);
 				
