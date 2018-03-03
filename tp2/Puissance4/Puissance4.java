@@ -13,7 +13,7 @@ public class Puissance4 {
 	public static void main(String[] args) {
 		//cr�ation des joueurs et appel de la fonction jouer
 		JoueurHumain joueur1 = new JoueurHumain();
-		JoueurMinMax joueur2 = new JoueurMinMax();
+		JoueurAlphaBeta joueur2 = new JoueurAlphaBeta();
 		
 		jouer(joueur1, joueur2);
 	}
