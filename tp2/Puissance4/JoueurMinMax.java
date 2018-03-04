@@ -1,17 +1,19 @@
 public class JoueurMinMax implements Joueur {
-	private static final int PROFONDEUR = 4;
+	private static final int PROFONDEUR = 6;
+	private int it = 0;
 
 	@Override
 	public Resultat coup(Grille grille, int joueur) {
-		Resultat res = max(grille.copie(), PROFONDEUR, joueur, grille.generateurCoups()[0]); 
+		Resultat res = max(grille.copie(), PROFONDEUR, joueur, grille.generateurCoups()[0], false); 
 		return res;
 	}
 	
-	public Resultat max(Grille grille, int profondeur, int joueur, int col) {
+	public Resultat max(Grille grille, int profondeur, int joueur, int col, boolean victoire) {
 		Resultat res = null, tmp = null;
 		double max = -(Double.MAX_VALUE);
+		System.out.println(grille);
 		
-		if(profondeur == 0 || grille.estPleine() || grille.coupGagnant(joueur, col)) {
+		if(profondeur == 0 || grille.estPleine() || victoire) {
 			res = new Resultat(col, (new FonctionEvaluationProf()).evaluation(grille, joueur));
 			return res;
 		} else {
@@ -19,9 +21,11 @@ public class JoueurMinMax implements Joueur {
 			Grille backtrack = grille.copie();
 			
 			for(int i = 0, c = coups.length; i < c; i++) {
-				tmp = min(grille.copie(), profondeur-1, Grille.joueurSuivant(joueur), coups[i]);
 				
+				victoire = grille.coupGagnant(joueur, coups[i]);
 				grille.joueEn(joueur, coups[i]);
+				
+				tmp = min(grille.copie(), profondeur-1, Grille.joueurSuivant(joueur), coups[i], victoire);
 				
 				if(max < tmp.getValeur()) {
 					max = tmp.getValeur();
@@ -36,11 +40,12 @@ public class JoueurMinMax implements Joueur {
 		return res;
 	}
 	
-	public Resultat min(Grille grille, int profondeur, int joueur, int col) {
+	public Resultat min(Grille grille, int profondeur, int joueur, int col, boolean victoire) {
 		Resultat res = null, tmp;
 		double min = Double.MAX_VALUE;
+		System.out.println(grille);
 		
-		if(profondeur == 0 || grille.estPleine() || grille.coupGagnant(joueur, col)) {
+		if(profondeur == 0 || grille.estPleine() || victoire) {
 			res = new Resultat(col, (new FonctionEvaluationProf()).evaluation(grille, joueur));
 			return res;
 		} else {
@@ -48,10 +53,12 @@ public class JoueurMinMax implements Joueur {
 			Grille backtrack = grille.copie();
 			
 			for(int i = 0, c = coups.length; i < c; i++) {
-				tmp = max(grille.copie(), profondeur-1, Grille.joueurSuivant(joueur), coups[i]);
-
+				
+				victoire = grille.coupGagnant(joueur, coups[i]);
 				grille.joueEn(joueur, coups[i]);
 				
+				tmp = max(grille.copie(), profondeur-1, Grille.joueurSuivant(joueur), coups[i], victoire);
+
 				if(min > tmp.getValeur()) {
 					min = tmp.getValeur();
 					res = tmp;
