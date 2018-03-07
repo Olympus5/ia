@@ -1,5 +1,5 @@
 public class JoueurMinMax implements Joueur {
-	private static final int PROFONDEUR = 6;
+	private static final int PROFONDEUR = 4;
 	private int it = 0;
 
 	@Override
@@ -11,7 +11,7 @@ public class JoueurMinMax implements Joueur {
 	public Resultat max(Grille grille, int profondeur, int joueur, int col, boolean victoire) {
 		Resultat res = null, tmp = null;
 		double max = -(Double.MAX_VALUE);
-		System.out.println(grille);
+		//System.out.println(grille);
 		
 		if(profondeur == 0 || grille.estPleine() || victoire) {
 			res = new Resultat(col, (new FonctionEvaluationProf()).evaluation(grille, joueur));
@@ -43,10 +43,10 @@ public class JoueurMinMax implements Joueur {
 	public Resultat min(Grille grille, int profondeur, int joueur, int col, boolean victoire) {
 		Resultat res = null, tmp;
 		double min = Double.MAX_VALUE;
-		System.out.println(grille);
+		//System.out.println(grille);
 		
 		if(profondeur == 0 || grille.estPleine() || victoire) {
-			res = new Resultat(col, (new FonctionEvaluationProf()).evaluation(grille, joueur));
+			res = new Resultat(col, -(new FonctionEvaluationProf()).evaluation(grille, joueur));
 			return res;
 		} else {
 			int[] coups = grille.generateurCoups();

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Puissance4"/>
+	<classpathentry kind="lib" path="/home/erwan/Cours/m1/ia/tp2/Puissance4/Bibli/FonctionEvaluationProf.jar"/>
+	<classpathentry kind="lib" path="/home/erwan/Cours/m1/ia/tp2/Puissance4/Bibli/Lecture.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -107,7 +107,7 @@ public class Grille{
 	
 	/**
 	 * Fonction qui donne le nombre de cases cons�cutives occup�es par
-	 * joueur dans la 1�re diagonale, � partir de la case (l,c).
+	 * joueur dans la 1�re diagonale, � partir de la case (l,c). (Pente ascendante)
 	 * @param joueur : le joueur consid�r�.
 	 * @param l : l'indice de la ligne.
 	 * @param c : l'indice de la colonne.
@@ -115,7 +115,7 @@ public class Grille{
 	 */
 	public int getNbCasesDiagonale1(int joueur, int l, int c){
 		int nb = 0;
-
+		
 		if(_grille[l][c] != joueurSuivant(joueur)){
 			nb ++;
 			boolean egal = true;
@@ -144,7 +144,7 @@ public class Grille{
 	
 	/**
 	 * Fonction qui donne le nombre de cases cons�cutives occup�es par
-	 * joueur dans la 2�me diagonale, � partir de la case (l,c).
+	 * joueur dans la 2�me diagonale, � partir de la case (l,c). (Pente descendante)
 	 * @param joueur : le joueur consid�r�.
 	 * @param l : l'indice de la ligne.
 	 * @param c : l'indice de la colonne.
@@ -323,6 +323,10 @@ public class Grille{
 	 * @return vrai si joueur gagne en jouant dans la colonne c.
 	 */
 	public boolean coupGagnant(int joueur, int c){
+		if(!this.peutJouerEn(c)) {
+			return this.peutJouerEn(c);
+		}
+		
 		int l = _libre[c];
 		
 		int nbD1 = getNbCasesDiagonale1(joueur, l, c);

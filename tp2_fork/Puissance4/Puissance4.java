@@ -12,8 +12,8 @@ public class Puissance4 {
 
 	public static void main(String[] args) {
 		//cr�ation des joueurs et appel de la fonction jouer
+		JoueurMinMaxProf joueur2 = new JoueurMinMaxProf();
 		JoueurHumain joueur1 = new JoueurHumain();
-		JoueurMinMax joueur2 = new JoueurMinMax();
 		
 		jouer(joueur1, joueur2);
 	}
@@ -38,7 +38,7 @@ public class Puissance4 {
 		
 		
 		//boucle de jeu
-		while(!jeuFini || grille.estPleine()){
+		while(!jeuFini && !grille.estPleine()){
 			//affichage de la grille 
 			System.out.println(grille);
 			
@@ -55,6 +55,7 @@ public class Puissance4 {
 			//On test si on a un coups gagnant
 			if(grille.coupGagnant(numJoueur, res.getColonne())) {
 				jeuFini = true;
+				System.out.println(grille.coupGagnant(numJoueur, res.getColonne()));
 				vainqueur = numJoueur;
 			}
 			
