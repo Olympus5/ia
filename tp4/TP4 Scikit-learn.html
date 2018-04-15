@@ -1,0 +1,525 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title>TP Scikit-learn</title>
+	<meta name="generator" content="LibreOffice 6.0.2.1 (MacOSX)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2018-03-16T16:32:41.313649200"/>
+	<style type="text/css">
+		h1 { color: #000000 }
+		p { color: #000000 }
+		h2 { color: #000000 }
+		h2.cjk { font-family: "SimSun" }
+		h2.ctl { font-family: "Lucida Sans" }
+		pre { color: #000000 }
+		pre.cjk { font-family: "Courier New", monospace }
+		a:link { color: #0000ff }
+		a:visited { color: #ff0000 }
+		code.cjk { font-family: "Courier New", monospace }
+	</style>
+</head>
+<body lang="fr-FR" text="#000000" link="#0000ff" vlink="#ff0000" bgcolor="#ffffff" dir="ltr">
+<h1 align="center">IA TP4 <br/>
+Machine Learning avec Scikit-learn</h1>
+<p>Ces travaux pratiques se basent sur <a href="http://scikit-learn.org/stable/index.html">Scikit-learn</a>,
+une bibliothèque libre d’apprentissage automatique pour le langage
+Python. Elle est conçue de façon à être interopérable avec les
+bibliothèques de calcul numérique et scientifique NumPy et SciPy.
+Un bon livre sur l’utilisation de Python pour la science des
+données est disponible sur GitHub&nbsp;: <a href="https://github.com/jakevdp/PythonDataScienceHandbook">Python
+for Data Science</a>.</p>
+<p>Une connaissance approfondie de Python n’est pas nécessaire
+pour ce TP, mais de nombreux tutoriaux sont disponibles si vous
+voulez en apprendre plus (par exemple <a href="https://swcarpentry.github.io/python-novice-inflammation/">this
+tutorial</a> ou <a href="http://www.python-course.eu/index.php">this
+one</a>).</p>
+<p>To <b>install</b> Scikit-learn and Tensor Flow on your own
+computer, I suggest to start by installing <a href="https://www.continuum.io/downloads">ANACONDA</a>
+which includes NumPy, SciPy and Scikit-learn. To visualize some
+models (in particular decision trees) in sklearn you will also need
+to install <a href="http://www.graphviz.org/Download..php">Graphviz</a>.
+You can download Tensor Flow from <a href="https://www.tensorflow.org/get_started/os_setup#anaconda_installation">this
+page</a>. 
+</p>
+<p>On your personal computer, note that if you do not want to use the
+standard Python interpreter from your terminal, you can use <code class="western">ptpython</code>
+(install it using <code class="western">pip install ptpython</code>)
+that will provide better completion, colors, edition help, ...
+Another interesting alternative is the &quot;Jupyter Notebook&quot;.
+It is a web application that allows you to create and share documents
+that contain live code, equations, visualizations and explanatory
+text. Jupyter is already installed in Anaconda, just type <code class="western">jupyter
+notebook</code> in your dev directory to use it. 
+</p>
+<p><font color="#ff9900"><b>Le rendu de ce TP est dû pour au plus
+tard 1 semaine après la dernière séance de votre groupe. Il sera
+envoyé par email à <a href="mailto:vincent.drevelle@irisa.fr">vincent.drevelle@irisa.fr</a>.
+Il est demandé un rapport de quelques pages, répondant aux
+questions et commentaires explicitement demandés dans le sujet,
+ainsi que des fichiers correspondant aux programmes demandés. Le
+tout sera compressé dans une archive zip ou tgz. Dans le rapport,
+dans el cas de commandes verbeuses, il est plus important d’expliquer
+ce que fait une commande, plutôt que de reproduire verbatim un
+listing de sortie trop long.</b></font> 
+</p>
+<p>L’essentiel du TP se fera à l’aide d’un dataset d’attributs
+déterminés à partir d’historiques de parties de Hearthstone.
+Remerciements à Clément Gautrais pour le travail sur les données.</p>
+<h2 class="western"><u>Exercice 1: Echauffement avec le dataset
+Hearthstone : (40 minutes)</u></h2>
+<p>Nous allons utiliser un fichier d’attributs générés au cours
+de parties de Hearthstone. L’idée étant de déterminer, à partir
+de l’état de la partie courante, l’issue du combat (gagné ou
+perdu).</p>
+<p>Le jeu d’attributs est contenu dans le fichier
+«&nbsp;full_dataset.csv&nbsp;» disponible sur le share. À titre
+d’information, il a été généré à partir d’un jeu de données
+d’historiques de parties, disponibles sur
+<a href="https://bitbucket.org/Valnora/hsdataset/">https://bitbucket.org/Valnora/hsdataset/</a>
+</p>
+<p>Afin de charger et manipuler les données, nous utiliserons la
+bibliothèque Python «&nbsp;pandas&nbsp;». Ce module est spécialisé
+dans la gestion et le traitement de jeux de données, et très
+utilisé dans la communauté datascience.</p>
+<p>Démarrez <code class="western">python</code> (or <code class="western">ptpython</code>)
+dans un terminal. Les commandes suivantes vont permettre de charger
+le datatset Hearthstone. 
+</p>
+<pre class="western">import pandas as pd #charge le module pandas et le renomme pd
+data = pd.read_csv(&quot;full_dataset.csv&quot;)</pre><p>
+L’objet «&nbsp;data&nbsp;» est un «&nbsp;dataframe&nbsp;» dans
+le jargon pandas. Pour afficher ses attributs, on peut taper : 
+</p>
+<pre class="western">print(data.columns)
+</pre><p>
+Une vue résumée du jeu de données peut être obtenue en tapant</p>
+<pre class="western">print(data) # ou tout simplement data
+</pre><p>
+Exécutez les commandes suivantes et comprenez ce qu’elles font
+(inscrivez dans votre rapport les réponses correspondant au ligne
+ssurlignées); <b>vous pouvez bien sûr user et abuser du
+copier-coller dans le terminal </b>: 
+</p>
+<pre class="western"><span style="background: #fff200">print(len(data))</span><br/>
+help(len) # to quit the &quot;help&quot; press 'q' 
+<span style="background: #fff200">print(</span><span style="background: #fff200">data</span><span style="background: #fff200">.</span><span style="background: #fff200">columns</span><span style="background: #fff200">[0])</span><br/>
+print(data.columns[2])<br/>
+print(data.columns[-1]) 
+print(data.shape) 
+<span style="background: #fff200">print(data.iloc[0])</span><span style="background: #fff200"><br/>
+print(</span><span style="background: #fff200">data</span><span style="background: #fff200">[0:5])</span><br/>
+print(data[-5:-1])<br/>
+print(data[0:10:3])<br/>
+<span style="background: #fff200">print(data[&quot;my_health&quot;])</span><span style="background: #fff200"><br/>
+print(</span><span style="background: #fff200">data[[&quot;my_health&quot;,&quot;my_hand&quot;]]</span><span style="background: #fff200">[0:5])</span>
+ </pre><p>
+Le champ &quot;result&quot; du jeu de données contient l'issue du
+match : 0 si perdu, 1 si gagné. Le champ &quot;turn_id&quot; indique
+le numéro de tour (à partir du deuxième tour). Enfin, le champ
+&quot;turns_to_end&quot; indique combien de tours restants avant la
+fin de partie. Nous souhaitons faire l'étude à un certain nombre de
+tours avant la fin, nous allons donc filtrer le jeu de données pour
+ne conserver que les entrées correspondantes :</p>
+<pre class="western">turns_before_end = 4   # 4 tours avant la fin<br/>
+<span style="background: #fff200">turn_df = data[data[&quot;turns_to_end&quot;]==turns_before_end]</span>
+print(len(turn_df))</pre><p>
+<br/>
+Nous allons extraire les caractéristiques dans la variable X,
+et l'issue du match correspondant dans la variable Y :</p>
+<pre class="western">features_cols = [&quot;my_health&quot;, &quot;opponent_health&quot;, &quot;my_hand&quot;, &quot;opponent_hand&quot;, &quot;my_board_nb_creatures&quot;,
+     &quot;my_board_total_health&quot;, &quot;my_board_total_attack&quot;, &quot;opponent_board_nb_creatures&quot;,
+     &quot;opponent_board_total_health&quot;, &quot;opponent_board_total_attack&quot;, &quot;me_playing&quot;]
+
+pred_col = [&quot;result&quot;]
+
+X = turn_df[features_cols]
+Y = turn_df[pred_col]
+</pre><p>
+<br/>
+<br/>
+
+</p>
+<p>La bibliothèque <code class="western"><a href="http://matplotlib.org/">matplotlib</a></code>
+et plus particulièrement son module <code class="western">matplotlib.pyplot</code>
+peut être utilisée pour visualiser les données. &quot;<i>Pyplot
+provides the state-machine interface to the underlying plotting
+library in matplotlib. This means that figures and axes are
+implicitly and automatically created to achieve the desired plot. For
+example, calling plot from pyplot will automatically create the
+necessary figure and axes to achieve the desired plot. Setting a
+title will then automatically set that title to the current axes
+object</i>&quot;. <br/>
+Exécuter les commandes suivantes et
+comprenez (et notez dans votre rapport) ce qu’elles font: 
+</p>
+<pre class="western">from matplotlib import pyplot as plt # replace the name &quot;pyplot&quot; by &quot;plt&quot; 
+x_col=&quot;my_health&quot;
+y_col=&quot;opponent_health&quot;
+<span style="background: #fff200">plt.scatter(X[</span><span style="background: #fff200">x_col</span><span style="background: #fff200">], X[</span><span style="background: #fff200">y_col</span><span style="background: #fff200">],c=Y)</span> # all the functions defined in a given library should be prefixed by the name of the library 
+<span style="background: #fff200">plt.show()</span><br/>
+help(plt.scatter) 
+<span style="background: #fff200">plt.xlabel(x_col)</span><br/>
+plt.ylabel(y_col)
+plt.title(&quot;Hearthstone data: health&quot;)<br/>
+plt.scatter(X[x_col], X[y_col],c=Y)<br/>
+plt.show() </pre><p>
+<br/>
+<br/>
+
+</p>
+<p>The following sequence of commands allows you to obtain a slightly
+more precise answer. Execute the commands and understand (and write
+in your report for the ones numbered) what they do: 
+</p>
+<pre class="western">print(Y[&quot;result&quot;]==0) 
+<span style="background: #fff200">print(X[Y</span><span style="background: #fff200">[&quot;result&quot;]</span><span style="background: #fff200">==0])</span>
+<span style="background: #fff200">plt.scatter(X[Y[&quot;result&quot;]==0][x_col], X[Y[&quot;result&quot;]==0][y_col], color=&quot;red&quot;,label=&quot;lose&quot;)</span>
+plt.scatter(X[Y[&quot;result&quot;]==1][x_col], X[Y[&quot;result&quot;]==1][y_col], color=&quot;green&quot;,label=&quot;win&quot;) 
+<span style="background: #fff200">plt.legend()</span><br/>
+plt.show() </pre><p>
+<br/>
+<br/>
+
+</p>
+<p>Pour terminer, créez un fichier &quot;TP4prog1.py&quot; (pas
+demandé dans votre rendu) qui contient le programme suivant : 
+</p>
+<pre class="western"># -*- coding: utf-8 -*-
+import pandas as pd
+from matplotlib import pyplot as plt
+from numpy.random import random
+
+data = pd.read_csv(&quot;full_dataset.csv&quot;)
+
+features_cols = [&quot;my_health&quot;, &quot;opponent_health&quot;, &quot;my_hand&quot;, &quot;opponent_hand&quot;, &quot;my_board_nb_creatures&quot;,
+     &quot;my_board_total_health&quot;, &quot;my_board_total_attack&quot;, &quot;opponent_board_nb_creatures&quot;,
+     &quot;opponent_board_total_health&quot;, &quot;opponent_board_total_attack&quot;, &quot;me_playing&quot;]
+
+pred_col = [&quot;result&quot;]
+
+turns_before_end = 4
+
+turn_df = data[data[&quot;turns_to_end&quot;] == turns_before_end]
+X = turn_df[features_cols]
+Y = turn_df[pred_col]
+
+x_col=&quot;my_health&quot;
+y_col=&quot;opponent_health&quot;
+
+colors=[&quot;red&quot;,&quot;green&quot;]
+for i in range(2):
+    indices = Y[&quot;result&quot;]==i
+    plt.scatter(X[indices][x_col] + 0.5*(random(X[indices].shape[0])-0.5),
+                X[indices][y_col] + 0.5*(random(X[indices].shape[0])-0.5),
+                color=colors[i],label=i,s=2)
+plt.legend()
+plt.xlabel(x_col) 
+plt.ylabel(y_col)
+plt.title(&quot;Hearthstone data: health&quot;) 
+plt.show()
+</pre><p>
+Dans un terminal, lancez le programme en tapant <code class="western">python
+</code><code class="western">TP4</code><code class="western">prog1.py</code>
+. À quoi sert le random ?</p>
+<h2 class="western"><u>Exercice 2 : Classification KNN sur
+Hearthstone (40 minutes)</u></h2>
+<p>La documentation du classificateur &quot;k plus proches voisins&quot;
+KNN dans scikit-learn est accessible depuis <a href="http://scikit-learn.org/stable/modules/neighbors.html">cette
+page</a>. L’algorithme KNN est implémenté dans le package
+<code class="western">neighbors</code>. Dans la suite, the <code class="western">clf
+= neighbors.KNeighborsClassifier(n neighbors)</code> crée un objet
+&quot;classificateur KNN&quot;, <code class="western">clf.fit(X, Y)</code>
+utilise les données pour définir le classificateur, la commande
+<code class="western">clf.predict</code> permet de classifier de
+nouveaux exemples et <code class="western">clf.predict_proba</code>
+estime la probabilité de la classification donnée. <code class="western">clf.score</code>
+calcule le score global du classificateur sur un jeu de données.
+<br/>
+Exécutez les commandes suivantes, et comprenez (et écrivez
+dans votre rapport pour celles qui sont surlignées) ce qu’elles
+font : 
+</p>
+<pre class="western">from sklearn import neighbors
+nb_neighb = 25
+help(neighbors.KNeighborsClassifier)
+clf = neighbors.KNeighborsClassifier(nb_neighb)
+help(clf.fit)
+<span style="background: #fff200">clf.fit(X, Y)</span> #this obviously does not work if X and Y were not defined before in previous commands<br/>
+help(clf.predict) 
+print(clf.predict(X[0:5])) 
+<span style="background: #fff200">print(clf.predict_proba(</span><span style="background: #fff200">X[0:5]</span><span style="background: #fff200">))</span> 
+<span style="background: #fff200">print(clf.score(X,Y))</span> 
+Z = clf.predict(X) 
+print(X[ Z!=Y[&quot;result&quot;] ]) 
+</pre><p>
+Vous avez appris que le score empirique (ex&nbsp;: précision) obtenu
+sur le jeu d’apprentissage surestime le vrai score du
+classificateur sur des données inconnues. On a donc besoin d’un
+jeu de données indépendantes du jeu d’apprentissage mais générées
+dans les mêmes conditions, afin d’évaluer le classificateur. On
+sépare donc les données en deux jeux&nbsp;: le jeu d’apprentissage
+et le jeu de test, on entraine le classificateur avec le jeu
+d’apprentissage et on l’évalue avec le jeu de test. Cependant,
+si on a peu de données, cette évaluation peut être pessimiste
+(<span style="background: #fff200">expliquer pourquoi</span>). Scikit
+learn propose un module <a href="http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html">model
+selection</a> qui permet de séparer un jeu de données en jeux
+d’apprentissage/test (en utilisant
+<code class="western">model_selection.train_test_split</code>). Le
+module <a href="http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">metrics</a>
+fournit de nombreux critères d’évaluation pour votre
+classificateur. 
+</p>
+<pre class="western">from sklearn.model_selection import train_test_split 
+import random # to generate random numbers</pre><p>
+Exécutez les commandes suivantes, et comprenez (et écrivez dans
+votre rapport) ce qu’elles font : 
+</p>
+<pre class="western">X_train,X_test,Y_train,Y_test=train_test_split(X,Y,test_size=0.3,random_state=random.seed()) 
+help(train_test_split) 
+len(X_train)<br/>
+len(X_test) 
+<span style="background: #fff200">len(X_train[Y_train</span><span style="background: #fff200">[&quot;result&quot;]</span><span style="background: #fff200">==0])</span><br/>
+len(X_train[Y_train[&quot;result&quot;]==1])<br/>
+clf=clf.fit(X_train, Y_train)<br/>
+Y_pred =clf.predict(X_test) 
+<span style="background: #fff200">from sklearn.metrics import confusion_matrix</span><br/>
+cm = confusion_matrix(Y_test, Y_pred)<br/>
+print(cm) 
+</pre>
+<ol>
+	<li/>
+<p><span style="background: #fff200">Expliquer en quelques
+	lignes ce qu'on voit (en général) dans une matrice de confusion</span><span style="background: #fff200">.</span>
+		</p>
+</ol>
+<p>Pourquoi a-t-on choisi k=25 ? Comment choisir la meilleure valeur
+pour k ? En général, ces hyper-parametres sont ajustés en
+utilisant la validation croisée. Le module model_selection fournit
+la fonction <code class="western">KFold</code> qui sépare le dataset
+original X en n parties qui sont des couples (jeu d’apprentissage,
+jeu de test).</p>
+<p>Exécutez les commandes suivantes : 
+</p>
+<pre class="western">from sklearn.model_selection import KFold
+kf=KFold(n_splits=10,shuffle=True)
+for learn,test in kf.split(X):
+        print(&quot;app : &quot;,learn,&quot; test &quot;,test) </pre>
+<ol>
+	<li/>
+<p><span style="background: #fff200">Réessayer avec le
+	paramètre</span><span style="background: #fff200"> </span><code class="western"><span style="background: #fff200">shuffle=False</span></code><span style="background: #fff200">.
+	</span><span style="background: #fff200">Que se passe-t-il </span><span style="background: #fff200">?</span>
+		</p>
+</ol>
+<p>Etudier et executer le programme suivant (TP4prog2.py, ne pas
+l'inclure dans votre archive): 
+</p>
+<pre class="western"># -*- coding: utf-8 -*-
+import random
+import pandas as pd
+from matplotlib import pyplot as plt
+
+data = pd.read_csv(&quot;full_dataset.csv&quot;)
+
+features_cols = [&quot;my_health&quot;, &quot;opponent_health&quot;, &quot;my_hand&quot;, &quot;opponent_hand&quot;, &quot;my_board_nb_creatures&quot;,
+     &quot;my_board_total_health&quot;, &quot;my_board_total_attack&quot;, &quot;opponent_board_nb_creatures&quot;,
+     &quot;opponent_board_total_health&quot;, &quot;opponent_board_total_attack&quot;, &quot;me_playing&quot;]
+pred_col = [&quot;result&quot;]
+
+turns_before_end = 4
+turn_df = data[data[&quot;turns_to_end&quot;] == turns_before_end]
+X = turn_df[features_cols]
+Y = turn_df[pred_col]
+
+from sklearn import neighbors
+from sklearn.model_selection import KFold
+kf=KFold(n_splits=10,shuffle=True)
+scores=[]
+k_values = range(1,600,5)
+for k in k_values:
+    score=0
+    clf = neighbors.KNeighborsClassifier(k)
+    for learn,test in kf.split(X):
+        X_train=X.iloc[learn]
+        Y_train=Y.iloc[learn]
+        clf.fit(X_train, Y_train)
+        X_test=X.iloc[test]
+        Y_test=Y.iloc[test]
+        score = score + clf.score(X_test,Y_test)
+    scores.append(score)
+print(scores)
+print(&quot;best k:&quot;,k_values[scores.index(max(scores))])
+plt.plot(k_values, scores)
+plt.show()
+</pre>
+<ol>
+	<li/>
+<p><span style="background: #fff200">Que se passe-t-il si vous
+	remplacez la ligne</span><span style="background: #fff200">
+	</span><code class="western"><span style="background: #fff200">kf=KFold(n_splits=10,shuffle=True)</span></code><span style="background: #fff200">
+	</span><span style="background: #fff200">par </span><span style="background: #fff200">
+	</span><code class="western"><span style="background: #fff200">kf=KFold(n_splits=3,shuffle=False)
+	</span></code><span style="background: #fff200">?</span> 
+	</p>
+</ol>
+<h2 class="western"><u>Exercice 3 : Arbres de décision sur
+Hearthstone (40 minutes)</u></h2>
+<p>Vous trouverez plus d’informations sur les classification par
+arbres de décisions (Decision Tree) dans scikit-learn à cette <a href="http://scikit-learn.org/stable/modules/tree.html">page</a>.
+L’algorithme est implémenté dans le sous-module <code class="western">tree</code>.
+Exécutez les commandes comprenez (et notez dans votre rapport) ce
+qu’elles font : 
+</p>
+<pre class="western" style="margin-bottom: 0.5cm">from sklearn import tree</pre><p style="margin-bottom: 0cm">
+<span style="background: #fff200">clf=tree.DecisionTreeClassifier()</span>
+</p>
+<p style="margin-bottom: 0cm"><span style="background: #fff200">clf=clf.fit(</span><span style="background: #fff200">X</span><span style="background: #fff200">,</span><span style="background: #fff200">Y</span><span style="background: #fff200">)</span>
+</p>
+<p style="margin-bottom: 0cm"><span style="background: #fff200">print(clf.predict(X[0:10]))
+</span>
+</p>
+<p style="margin-bottom: 0cm"><span style="background: #fff200">print(clf.score(</span><span style="background: #fff200">X</span><span style="background: #fff200">,</span><span style="background: #fff200">Y</span><span style="background: #fff200">))</span>
+</p>
+<p><span style="background: #fff200">tree.export_graphviz(clf,out_file='tree.dot')</span>
+</p>
+<p>La commande <code class="western">help(tree.DecisionTreeClassifier)</code>
+détaille tous les paramètres de l’algorithme, parmi lesquels&nbsp;:
+</p>
+<ul>
+	<li/>
+<p style="margin-bottom: 0cm"><code class="western">max_depth</code>:
+	(default none) La profondeur maximale de l’arbre. Si «&nbsp;None&nbsp;»,
+	alors les nœuds sont développés jusqu’à ce que toutes les
+	feuilles soient pures, ou jusqu’à ce que toutes les feuilles
+	contiennent moins de <i>min_samples_split</i> échantillons. 
+	</p>
+	<li/>
+<p style="margin-bottom: 0cm"><code class="western">min_samples_split</code>:(default=2)
+	Le nombre minimal d’exemples requis pour séparer un nœud
+	interne. 
+	</p>
+	<li/>
+<p><code class="western">max_leaf_nodes</code>: construit un
+	arbre avec un nombre de feuilles max ``max_leaf_nodes`` selon une
+	approche best-first. Les meilleurs nœuds sont définis par la
+	réduction relative de l’impureté. Si &quot;None&quot; alors le
+	nombre de nœuds feuilles n’est pas limité. 
+	</p>
+</ul>
+<p>Par exemple, vous pouvez essayer la commande
+<code class="western">clf=tree.DecisionTreeClassifier(criterion=&quot;entropy&quot;,max_depth=3,max_leaf_nodes=5)</code></p>
+<p>Sous Linux, vous pouvez transformer le fichier <code class="western">.dot</code>
+ en un <code class="western">.pdf</code> à l’aide de la commande
+<code class="western">dot -Tpdf tree.dot -o iris.pdf</code>. Si elle
+est installée, vous pouvez aussi lancer l’application <code class="western">graphviz</code>
+et ouvrir le fichier <code class="western">.dot</code> avec. 
+</p>
+<ol>
+	<li/>
+<p style="margin-bottom: 0cm">Ecrivez un programme <code class="western">TP</code><code class="western">4</code><code class="western">prog3.py</code>
+	qui ouvre le jeu de données Hearthstone et entraine un arbre de
+	décision avec les paramètres par défaut. Visualisez l’arbre.
+	Combien de feuilles contient-il. Recommencez l’entrainement en
+	diminuant graduellement le nombre de feuilles de 9 à 3 avec la
+	commande <code class="western">clf=tree.DecisionTreeClassifier(max_leaf_nodes=xx)</code>
+	et observez (et décrivez) les arbres obtenus. 
+	</p>
+	<li/>
+<p style="margin-bottom: 0cm">Ecrivez un programme <code class="western">TP</code><code class="western">4</code><code class="western">prog4.py</code>
+	qui ouvre le jeu de données Hearthstone et entraine un arbre de
+	décision avec le critère <b>Gini</b> (sauvez dans <code class="western">gini-iris.dot</code>)
+	et un second utilisant le critère <b>entropy</b> (dans
+	<code class="western">entropy-iris.dot</code>). Comparez les deux
+	arbres. 
+	</p>
+	<li/>
+<p style="margin-bottom: 0cm">Ecrivez un programme <code class="western">TP</code><code class="western">4</code><code class="western">prog5.py</code>
+	qui ouvre le jeu de données Hearthstone, séparer les données en
+	jeu d'apprentissage et de test (30% pour test). Apprenez un arbre de
+	décision avec la commande
+	<code class="western">clf=tree.DecisionTreeClassifier(max_leaf_nodes=50*i)</code>
+	(où &quot;i&quot; varie de 1 à 50) tet afficher le score du
+	classificateur sur le jeu d'apprentissage ET sur le jeu de test. Que
+	remarquez vous ? Quel est le nom de ce phénomène ? 
+	</p>
+	<li/>
+<p>Même question (<code class="western">TP</code><code class="western">4</code><code class="western">prog6.py</code>)
+	mais avec des arbres de <b>profondeurs</b> différentes, avec la
+	commande <code class="western">cclf=tree.DecisionTreeClassifier(max_depth=i)</code>.
+		</p>
+</ol>
+<p>Ces deux dernières questions montrent que la profondeur et le
+nombre de feuilles de l'arbre sont des paramètres importants pour le
+modèle. Ces paramètres sont liés mais différents. Ils doivent en
+général être optimisés à l'aide de la validation croisée.</p>
+<h2 class="western"><u>Exercice 4 : Réseau de Neurones sur DIGITS
+(30 minutes)</u></h2>
+<p>Le jeu de données <a href="http%20://scikit-learn.org/stable/auto%20examples/datasets/plot_digits_last_image.html">digits</a>
+contient 5620 instances, décrites par 64 attributs (qui
+correspondent à des images 8*8 de pixels dont la valeur est un
+entier de 0(blanc).. à 16(noir). La classe cible est un un chiffre
+entre 0 et 9. 
+</p>
+<p>Exécutez le programme suivant : 
+</p>
+<pre class="western">from sklearn.datasets import load_digits
+digits=load_digits()
+digits.data[0]
+digits.images[0]
+digits.data[0].reshape(8,8)
+digits.target[0]
+#you can see the pictures using this piece of code: 
+from matplotlib import pyplot as plt
+plt.gray()
+plt.matshow(digits.images[0])
+plt.show()
+#to count the number of examples of a particular class, you can use:
+Y=digits.target
+print(len(Y[Y==0]))</pre><p>
+Bien que beaucoup moins efficace que Tensor Flow pour les réseaux
+neuronaux profonds, sklearn contient une classe <a href="http://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html#sklearn.neural_network.MLPClassifier">MLPClassifier</a>
+qui implémente un perceptron multi-couches (multi-layer perceptron,
+MLP) entrainé par retropropagation. 
+</p>
+<pre class="western">from sklearn.neural_network import MLPClassifier
+X = digits.data</pre><p>
+Exécutez les commandes suivantes, et comprenez (et écrivez dans
+votre rapport) ce qu’elles font : 
+</p>
+<ol>
+	<li/>
+<p style="margin-bottom: 0cm"><code class="western">clf =
+	MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5,
+	2),random_state=1) <br/>
+clf.fit(X, Y) </code>
+	</p>
+	<li/>
+<p>Écrivez un programme <code class="western">TP</code><code class="western">4</code><code class="western">prog7.py</code>
+	qui ouvre le dataset DIGITS et entraine un MLP avec les paramètres
+	par défaut et un petit nombre de couches cachées. Séparez les
+	données en un jeu d’apprentissage et un jeu de test (30% pour
+	test) et rapportez le score du classificateur sur le jeu de test.
+	Changez au moins 3 paramètres du classificateur (ex : nombre de
+	neurones, nombre de couches, taux d’apprentissage) et rapportez le
+	score obtenu sur le jeu de test pour chaque version. Que concluez
+	vous&nbsp;? 
+	</p>
+</ol>
+<h2 class="western"><u>Exercice 5 : Jouez avec les données
+Hearthstone</u></h2>
+<p>Tous les programmes développés dans cette partie seront à
+remettre avec le rapport.</p>
+<p>1. Entrainez un réseau de neurones pour le jeu de données
+Hearthstone. Vous vous baserez sur la question précédente. Vous
+rendrez le programme dans un fichier TP4prog8.py</p>
+<p>2. Parmi les 3 classificateurs développés pour Haerthstone,
+lequel vous parait le plus adapté ?</p>
+<p>3. Nous avons fait tout le TP en supposant que l'on était à 4
+tours avant la fin de partie. Choisissez au moins un des
+classificateurs que vous avez crée pour le jeu de données
+Hearthstone, et étudiez son score en fonction de la proximité de
+fin de partie. Programme TP4prog9.py</p>
+</body>
+</html>
