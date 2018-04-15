@@ -1,16 +1,16 @@
-# Rapport TP4
+# Rapport TP4
 
 Erwan IQUEL - Antoine LEVAL
 
 ---
 
-## Avant propos
+## Avant propos
 
 **Ce TP a été fait sous python3.6 avec Anaconda3**
 
 ---
 
-## Exercice 1:
+## Exercice 1:
 
 1. Affiche la taille du dataframe (*36148*)
 2. Affiche le nom de la 1ère colonne (*game_id*)
@@ -27,7 +27,7 @@ Erwan IQUEL - Antoine LEVAL
 13. Nous avons ce message (erreur ???): "No handles with labels found to put in legend."
 14. random est là pour minimiser tout biais qu'il y aurait dans les données
 
-## Exercice 2:
+## Exercice 2:
 
 1. Applique l'algorithme KNN à notre jeu de donnée ("4 tours de la fin"), pour l'entrainer
 2. Probabilités de victoire adverse sur les 5 premières lignes suite à l'entrainement (en classifiant les données)
@@ -41,7 +41,7 @@ Erwan IQUEL - Antoine LEVAL
 
 ## Exercice 3:
 
-1. Crée un arbre de décision*
+1. Crée un arbre de décision
 2. Applique l'arbre de décision sur le jeu de données
 3. Prédiction sur les lignes allant de 0 à 10 de notre dataset (avec arbre de décision)
 4. Évalue la qualité de notre modèle (arbre de décision)
@@ -49,7 +49,7 @@ Erwan IQUEL - Antoine LEVAL
 6. Le score du set d'*entrainement* est de *100%* pendant que celui du *test* est de environ 75%. Il y a eu sur-apprentissage (overfitting)
 7. Même problème que précédemment, sur-apprentissage
 
-## Exercice 4:
+## Exercice 4:
 
 1. `clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2),random_state=1)` Crée un MLP avec les caractéristiques suivantes:
     * solver: Solver de type quasi-newton
